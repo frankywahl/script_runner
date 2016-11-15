@@ -1,25 +1,42 @@
 # ScriptRunner
-Short description and motivation.
+
+!!!STOP CONNECTING TO PRODUCTION!!!
+
+ScriptRunner is a tool that can be mounted on a rails application. It allows it's user to run arbitrary jobs.
+
+It order to run code / migration in production, one now has to create an `ActiveJob` the standard way, get it merged and run it with this tool.
+
+This is great for one-off scripts, or fixing that problem in production, but have a trace of how it was fixed (after all, you are using revision control right?).
 
 ## Usage
-How to use my plugin.
+
+By default, ScriptRunner will look in the `/app/jobs/` directory for relevant jobs.
+
+If you wish to add a folder where you obs are located, in your initializer you can use:
+
+```ruby
+ScriptRunner.config do |c|
+	c.jobs_paths << Rails.root.join('path', 'to', 'my', 'folder')
+end
+```
 
 ## Installation
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'script_runner'
+gem 'script_runner', github: 'frankywahl/script_runner'
 ```
 
-And then execute:
-```bash
-$ bundle
+Now, in your routes:
+
+```ruby
+mount ScriptRunner::Engine => "/script_runner" #or any other path
 ```
 
-Or install it yourself as:
-```bash
-$ gem install script_runner
-```
+Now you can visit `http://<you_url>/script_runner` to enqueue a job
+
+## Notes
+ScriptRunner will require all your Jobs before loading instead of counting on Rails lazy loading. This could have an small performance affect on your application based on how many jobs get loaded into memory.
 
 ## Contributing
 Contribution directions go here.
