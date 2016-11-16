@@ -10,22 +10,18 @@ module ScriptRunner
 
     # GET /jobs
     def index
-      @jobs = ApplicationJob.descendants
-    end
-
-    # GET /jobs/1
-    def show
+      @jobs = ApplicationJob.descendants.reject { |x| x == RunScriptJob }
     end
 
     # GET /jobs/new
     def new
-      @jobs = ApplicationJob.descendants
+      @jobs = ApplicationJob.descendants.reject { |x| x == RunScriptJob }
     end
 
     # POST /jobs
     def create
-      job = job_params.constantize
-      job.perform_later
+      current_user = send(ScriptRunner.config.current_user_method) || OpenStruct.new(id: nil)
+      RunScriptJob.perform_later(current_user.id, job_params.to_s, job_params)
       redirect_to jobs_path, notice: 'Job succesffully enqueued'
     end
 

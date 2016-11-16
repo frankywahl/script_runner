@@ -35,6 +35,29 @@ mount ScriptRunner::Engine => "/script_runner" #or any other path
 
 Now you can visit `http://<you_url>/script_runner` to enqueue a job
 
+## Modifying the job before or after
+
+In order to modify behavior, or do something based on the user, one has access to a setup hook.
+For example, suppose you want to audit who makes the change in you models, using [PaperTrail]. Then, one could setup the following in an initializer. Note: this `user_id` could be `nil` if it is for example a guest user (or someone not logged in).
+
+```ruby
+ScriptRunner.config do |c|
+  c.around_job do |user_id, block|
+    PaperTrail.whodunnit = user_id
+    block.call
+    PaperTrail.whodunnit = nil
+  end
+end
+```
+
+One can also configure the current user method (it defaults to `current_user`):
+
+```ruby
+ScriptRunner.config do |c|
+  c.current_user_method = :other_current_user_method
+end
+```
+
 ## Notes
 ScriptRunner will require all your Jobs before loading instead of counting on Rails lazy loading. This could have an small performance affect on your application based on how many jobs get loaded into memory.
 
