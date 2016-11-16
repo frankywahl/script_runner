@@ -1,9 +1,9 @@
-<h1>New Job</h1>
+<h1><%= t('script_runner.new') %></h1>
 
 <%= form_tag(jobs_path, method: :post) do %>
   <%= select_tag :job, options_for_select(@jobs) %>
   <div class="actions">
-    <%= submit_tag 'Submit' %>
+    <%= submit_tag t('script_runner.submit') %>
   </div>
 
   <%=

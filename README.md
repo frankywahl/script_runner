@@ -21,11 +21,22 @@ end
 ```
 
 ## Installation
+
 Add this line to your application's Gemfile:
 
 ```ruby
 gem 'script_runner', github: 'frankywahl/script_runner'
 ```
+
+
+You can run a generator:
+
+```bash
+rails g script_runner:install
+```
+
+Alternatively:
+
 
 Now, in your routes:
 
